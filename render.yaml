@@ -1,0 +1,26 @@
+# One-click deploy for Render (render.com → New → Blueprint → point at this repo).
+# Single service: Express serves the API + the static frontend, so one URL does everything.
+# Node version comes from backend/package.json engines (>=22.12, needed for node:sqlite).
+services:
+  - type: web
+    name: sipun-portfolio
+    runtime: node
+    plan: free
+    buildCommand: npm install --prefix backend
+    startCommand: node backend/server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_KEY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      # Only needed if the frontend lives on a DIFFERENT domain (e.g. Vercel).
+      # Same-service deploys leave this empty.
+      - key: FRONTEND_URL
+        sync: false

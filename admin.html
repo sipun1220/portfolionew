@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Manager — Sipun Das Portfolio</title>
+<meta name="description" content="Manage portfolio projects, inbox messages and site settings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+<div class="admin-liquid-orb admin-liquid-orb-a" aria-hidden="true"></div>
+<div class="admin-liquid-orb admin-liquid-orb-b" aria-hidden="true"></div>
+<div class="admin-liquid-orb admin-liquid-orb-c" aria-hidden="true"></div>
+<header class="site-nav"><div class="nav-inner container">
+  <a class="brand" href="index.html"><span class="brand-mark">S</span><span class="brand-text">Site manager<em>admin console</em></span></a>
+  <div class="nav-actions">
+    <div class="api-dot" id="apiDot"><span></span><em id="apiText">checking…</em></div>
+    <a class="nav-cta" href="index.html">← View site</a>
+    <button class="nav-toggle" id="adminLogout" title="Lock dashboard" style="display:grid" aria-label="Lock dashboard"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
+  </div>
+
+</div></header>
+
+<!-- Dashboard -->
+<div class="admin-shell" id="dashShell">
+  <aside class="admin-side">
+    <b class="side-title">Manage</b>
+    <button class="admin-tab active" data-tab="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Overview</span></button>
+    <button class="admin-tab" data-tab="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg><span>Projects</span> <span class="count" id="tabPCount">0</span></button>
+    <button class="admin-tab" data-tab="messages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><span>Inbox</span> <span class="count" id="tabMCount">0</span></button>
+    <button class="admin-tab" data-tab="internships"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h6"/></svg><span>Internships</span></button>
+    <b class="side-title">System</b>
+    <button class="admin-tab" data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>Settings</span></button>
+    <div style="margin-top:auto;padding:12px;font-size:.76rem;color:var(--faint)" id="sideHealth">Backend: …</div>
+  </aside>
+
+  <div class="admin-main">
+    <div class="admin-top">
+      <div><p class="kicker">Dashboard</p><h1 id="tabTitle">Overview</h1><p id="adminStatus">Connecting…</p></div>
+      <button class="cta-button" id="newProjectBtn">+ New project</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div data-panel="overview">
+      <div class="stat-grid">
+        <div class="stat-card"><small>Total projects</small><b id="stProjects">–</b><small class="stat-sub">live on site</small></div>
+        <div class="stat-card"><small>Featured</small><b id="stFeatured">–</b><small class="stat-sub">starred builds</small></div>
+        <div class="stat-card"><small>Inbox messages</small><b id="stMessages">–</b><small class="stat-sub">all time</small></div>
+        <div class="stat-card" id="unreadCard"><small>Unread</small><b id="stUnread">–</b><small class="stat-sub">needs a reply</small></div>
+      </div>
+      <div class="panel"><div class="panel-head"><h3>Recently added</h3><button class="ghost-button" data-goto="projects" style="padding:10px 18px">Manage all →</button></div><div class="admin-table" id="recentList"></div></div>
+      <div class="panel"><div class="panel-head"><h3>Latest enquiries</h3><button class="ghost-button" data-goto="messages" style="padding:10px 18px">Open inbox →</button></div><div style="display:grid;gap:10px" id="recentMsgs"></div></div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div data-panel="projects" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h3>All projects</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input class="admin-search" id="projSearch" placeholder="Search title / tech…">
+            <select class="sort-select" id="projFilter"><option value="all">All categories</option><option value="featured">★ Featured</option><option value="fullstack">Full-stack</option><option value="frontend">Frontend</option><option value="backend">Backend</option></select>
+          </div>
+        </div>
+        <div class="admin-table" id="adminList"></div>
+        <p class="table-foot">Tip: starring a project pins it to the homepage grid.</p>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div data-panel="messages" hidden>
+      <div class="panel">
+        <div class="panel-head"><h3>Inbox — contact enquiries</h3><button class="ghost-button" id="refreshBtn" style="padding:10px 18px">Refresh</button></div>
+        <div class="admin-table" id="msgList" style="grid-template-columns:1fr"></div>
+      </div>
+    </div>
+
+    <!-- INTERNSHIPS -->
+    <div data-panel="internships" hidden>
+      <div class="panel">
+        <div class="panel-head"><h3>Edit internship experience</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="ghost-button" id="refreshInternships" type="button">Refresh content</button><button class="cta-button" id="addInternship" type="button">+ Add internship</button><button class="cta-button" id="saveInternships">Save internships</button></div></div>
+        <p class="form-hint">Edit each internship separately. Changes appear on the About page after saving.</p>
+        <div class="internship-editor-list" id="internshipEditorList"></div>
+        <p class="form-hint" id="internshipsHint"></p>
+      </div>
+      <div class="panel"><div class="panel-head"><h3>Supported documents</h3></div><p style="color:var(--muted);font-size:.9rem">Bluestock certificate, DBERT completion certificate and DBERT recommendation are available from the About page. Replace or upload document assets with <code>backend/upload-documents.js</code> when needed.</p></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div data-panel="settings" hidden>
+      <div class="panel"><div class="panel-head"><h3>Connection</h3></div>
+        <div class="admin-form">
+          <label>Backend API base URL<input id="apiBase" placeholder="http://localhost:5000"></label>
+          <label>Browser key — must match the server password (backend/.env → ADMIN_KEY)<input id="keyField" type="password" placeholder="Your ADMIN_KEY value"></label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="cta-button" id="saveSettings">Save settings</button><button class="ghost-button" id="testBtn">Test connection</button></div>
+          <p class="form-hint" id="settingsHint"></p>
+        </div>
+      </div>
+      <div class="panel"><div class="panel-head"><h3>How the site stays updated</h3></div>
+        <p style="color:var(--muted);font-size:.9rem">The homepage reads <code>GET /api/projects</code> automatically. Add or star a project here and it appears on the live site after refresh — no redeploy. Images upload to Cloudinary when configured, otherwise paste an image URL. Change the real key in <code>backend/.env → ADMIN_KEY</code> and restart the server.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Project drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Project editor">
+  <p class="kicker">Project editor</p>
+  <h3 id="formTitle" style="font-size:1.7rem;margin-top:6px">+ Add project</h3>
+  <form class="admin-form" id="projectForm">
+    <input type="hidden" id="fId">
+    <label>Title *<input id="fTitle" required maxlength="80" placeholder="E-commerce store"></label>
+    <label>Description *<textarea id="fDesc" rows="4" required maxlength="600" placeholder="What it does, who it helps, what you built…"></textarea></label>
+    <label>Techs (comma separated)<input id="fTechs" placeholder="React, Node.js, MongoDB"></label>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <label>Category<select id="fCat"><option value="fullstack">Full-stack</option><option value="frontend">Frontend</option><option value="backend">Backend</option></select></label>
+      <label style="display:flex;gap:10px;align-items:center;margin-top:26px" class="checkline"><input type="checkbox" id="fFeat" style="width:18px;height:18px"> ★ Featured</label>
+    </div>
+    <label>GitHub URL<input id="fGithub" type="url" placeholder="https://github.com/…"></label>
+    <label>Live URL<input id="fLive" type="url" placeholder="https://…"></label>
+    <label>Image URL (or upload below)<input id="fImg" type="url" placeholder="https://…"></label>
+    <label>Upload cover (images only, ≤5MB)<input type="file" id="fFile" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,image/svg+xml"></label>
+    <div id="imgPreview" style="display:none;align-items:center;gap:10px">
+      <img id="imgPrevThumb" alt="cover preview" style="width:64px;height:64px;object-fit:cover;border-radius:12px;border:1px solid var(--line)">
+      <small id="imgPrevMeta" style="color:var(--muted)"></small>
+      <button type="button" class="icon-btn danger" id="imgClear">×</button>
+    </div>
+    <div class="save-progress" id="saveProgress"><span></span></div>
+    <div style="display:flex;gap:10px"><button class="cta-button" type="submit" id="saveBtn" style="flex:1">Save project</button><button class="ghost-button" type="button" id="cancelBtn">Cancel</button></div>
+  </form>
+</aside>
+
+<div class="toast" id="toast"></div>
+<script>
+const $ = id => document.getElementById(id);
+const toast = $('toast');
+function showToast(m){ toast.textContent = m; toast.classList.add('show'); clearTimeout(showToast._t); showToast._t = setTimeout(()=>toast.classList.remove('show'), 3600); }
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const MAX_IMG = 5 * 1024 * 1024;
+const isLocalDev = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) || location.protocol === 'file:';
+let API = localStorage.getItem('api_base') || (isLocalDev ? 'http://localhost:5000' : location.origin);
+let KEY = sessionStorage.getItem('admin_key') || '';
+let projects = [], messages = [];
+if (!KEY) window.location.replace('admin-login.html');
+
+const headers = (json) => ({ ...(json ? {'Content-Type':'application/json'} : {}), ...(KEY ? {'x-admin-key': KEY} : {}) });
+async function api(path, opts = {}) {
+  const r = await fetch(API + path, { ...opts, headers: { ...headers(opts.json), ...(opts.headers || {}) } });
+  if (r.status === 401) throw new Error('Wrong admin key — unlock again.');
+  if (!r.ok) { let e = {}; try { e = await r.json(); } catch {} throw new Error(e.error || ('HTTP ' + r.status)); }
+  return r.json();
+}
+
+async function loadInternships() {
+  try {
+    const items = await api('/api/content/internships');
+    const clean = value => typeof value === 'string' ? value.replace(/\uFFFD/g, '-').replace(/\s+/g, ' ').trim() : Array.isArray(value) ? value.map(clean) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([key, item]) => [key, clean(item)])) : value;
+    renderInternshipEditors(clean(items));
+    $('internshipsHint').textContent = 'Content loaded from the live database.';
+  } catch (e) { $('internshipsHint').textContent = 'Load failed: ' + e.message; }
+}
+$('refreshInternships').onclick = loadInternships;
+function internshipValue(item, key) { return esc(item?.[key] || ''); }
+function renderInternshipEditors(items) {
+  const list = $('internshipEditorList');
+  list.innerHTML = (Array.isArray(items) ? items : []).map((item, index) => `
+    <article class="internship-editor-card" data-internship-index="${index}">
+      <div class="internship-editor-head"><strong>Internship ${index + 1}</strong><button class="icon-btn danger remove-internship" type="button">Remove</button></div>
+      <div class="internship-editor-grid">
+        <label>ID<input data-field="id" value="${internshipValue(item, 'id')}" required></label>
+        <label>Company<input data-field="company" value="${internshipValue(item, 'company')}" required></label>
+        <label>Role<input data-field="role" value="${internshipValue(item, 'role')}" required></label>
+        <label>Period<input data-field="period" value="${internshipValue(item, 'period')}" required></label>
+        <label class="wide">Project<input data-field="project" value="${internshipValue(item, 'project')}" required></label>
+        <label class="wide">Contribution<textarea data-field="contribution" rows="4" required>${internshipValue(item, 'contribution')}</textarea></label>
+        <label class="wide">Skills <small>(comma separated)</small><input data-field="skills" value="${esc((item?.skills || []).join(', '))}"></label>
+        <label class="wide">Document IDs <small>(comma separated)</small><input data-field="documents" value="${esc((item?.documents || []).join(', '))}" placeholder="dbert-certificate, dbert-lor"></label>
+      </div>
+    </article>`).join('');
+  list.querySelectorAll('.remove-internship').forEach(button => button.onclick = () => {
+    button.closest('.internship-editor-card').remove();
+    [...list.children].forEach((card, index) => {
+      card.dataset.internshipIndex = index;
+      card.querySelector('.internship-editor-head strong').textContent = `Internship ${index + 1}`;
+    });
+  });
+}
+$('addInternship').onclick = () => {
+  const cards = [...document.querySelectorAll('.internship-editor-card')];
+  const items = cards.map(card => readInternshipCard(card));
+  items.push({ id: `internship-${items.length + 1}`, company: '', role: '', period: '', project: '', contribution: '', skills: [], documents: [] });
+  renderInternshipEditors(items);
+  document.querySelector('.internship-editor-card:last-child')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+function readInternshipCard(card) {
+  const value = field => card.querySelector(`[data-field="${field}"]`)?.value.trim() || '';
+  return {
+    id: value('id'), company: value('company'), role: value('role'), period: value('period'),
+    project: value('project'), contribution: value('contribution'),
+    skills: value('skills').split(',').map(s => s.trim()).filter(Boolean),
+    documents: value('documents').split(',').map(s => s.trim()).filter(Boolean),
+  };
+}
+$('saveInternships').onclick = async () => {
+  const btn = $('saveInternships'), hint = $('internshipsHint');
+  const internships = [...document.querySelectorAll('.internship-editor-card')].map(readInternshipCard);
+  if (!internships.length) { hint.textContent = 'Add at least one internship before saving.'; return; }
+  if (internships.some(item => !item.id || !item.company || !item.role || !item.period || !item.project || !item.contribution)) { hint.textContent = 'Complete all required fields before saving.'; return; }
+  btn.disabled = true; hint.textContent = 'Saving…';
+  try {
+    await api('/api/content/internships', { method: 'PUT', body: JSON.stringify({ internships }), json: true });
+    hint.textContent = 'Saved — the About page now uses this content.';
+  } catch (e) { hint.textContent = 'Save failed: ' + e.message; }
+  btn.disabled = false;
+};
+function imgSrc(p){ if(!p.imageUrl) return 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200&q=60'; if(/^https?:|^data:/.test(p.imageUrl)) return p.imageUrl; if(p.imageUrl.startsWith('/uploads')) return API + p.imageUrl; return p.imageUrl; }
+
+// tabs
+document.querySelectorAll('.admin-tab').forEach(t => t.onclick = () => switchTab(t.dataset.tab));
+document.querySelectorAll('[data-goto]').forEach(b => b.onclick = () => switchTab(b.dataset.goto));
+function switchTab(name){
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== name);
+  $('tabTitle').textContent = { overview: 'Overview', projects: 'Projects', messages: 'Inbox', internships: 'Internships', settings: 'Settings' }[name];
+}
+
+// The login page owns authentication; this page only runs with a session key.
+function refreshLock(){ if (!KEY) window.location.replace('admin-login.html'); }
+$('adminLogout').onclick = () => { sessionStorage.removeItem('admin_key'); window.location.replace('admin-login.html'); };
+
+async function loadAll(){
+  try {
+    const h = await fetch(API + '/api/health').then(r => r.json());
+    const label = `${h.db === 'mongodb' ? 'MongoDB' : 'SQLite'}${h.cloudinary ? ' · images → Cloudinary ✓' : ' · image URL mode'}`;
+    $('adminStatus').textContent = `● Connected at ${API} · DB: ${label}`;
+    $('sideHealth').textContent = 'Backend: ' + label;
+    $('apiDot').classList.add('on'); $('apiText').textContent = 'live';
+  } catch {
+    $('adminStatus').textContent = '○ Backend offline — cd backend → npm install → npm run dev, then refresh.';
+    $('apiText').textContent = 'offline'; showToast('Backend offline — start it first.');
+    return;
+  }
+  try {
+    const [st, pr, mr] = await Promise.all([api('/api/stats'), api('/api/projects'), api('/api/messages')]);
+    projects = pr; messages = mr;
+    await loadInternships();
+    $('stProjects').textContent = st.projects; $('stFeatured').textContent = st.featured;
+    $('stMessages').textContent = st.messages; $('stUnread').textContent = st.unread;
+    $('unreadCard').classList.toggle('ok', st.unread > 0);
+    $('tabPCount').textContent = pr.length; $('tabMCount').textContent = mr.filter(m => !m.read).length || mr.length;
+    renderRecent(); renderProjects(); renderMessages();
+  } catch (e) { showToast('Load failed: ' + e.message); if (/admin key|unauthorized/i.test(e.message)) { KEY=''; refreshLock(); } }
+}
+
+function projectRow(p){
+  return `<div class="admin-row"><img src="${esc(imgSrc(p))}" onerror="this.src='https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200'" alt="">
+    <div><b>${esc(p.title)} ${p.featured ? '★' : ''}</b><small>${esc(p.category)} · ${esc((p.techs||[]).join(', '))}</small></div>
+    <div class="row-actions">
+      <button class="icon-btn star ${p.featured ? 'on' : ''}" onclick="toggleFeat('${p._id}')">★</button>
+      <button class="icon-btn" onclick="editP('${p._id}')">Edit</button>
+      <button class="icon-btn danger" onclick="delP('${p._id}')">Delete</button>
+    </div></div>`;
+}
+function renderRecent(){
+  $('recentList').innerHTML = projects.slice(0, 3).map(projectRow).join('') || '<p style="color:var(--muted)">No projects yet — add your first one.</p>';
+  $('recentMsgs').innerHTML = messages.slice(0, 3).map(m => `<div class="msg-row ${m.read ? '' : 'unread'}"><div class="msg-top"><b>${esc(m.name)}</b><small>${esc(m.email)}</small>${m.read ? '' : '<span class="unread-dot">NEW</span>'}</div><p>${esc(m.message).slice(0, 140)}</p></div>`).join('') || '<p style="color:var(--muted)">No enquiries yet.</p>';
+}
+function renderProjects(){
+  const q = ($('projSearch').value || '').toLowerCase(), f = $('projFilter').value;
+  const list = projects.filter(p =>
+    (f === 'all' || (f === 'featured' ? p.featured : p.category === f)) &&
+    (!q || (p.title + ' ' + (p.techs||[]).join(' ')).toLowerCase().includes(q)));
+  $('adminList').innerHTML = list.map(projectRow).join('') || '<p style="color:var(--muted)">Nothing matches.</p>';
+}
+$('projSearch').oninput = renderProjects; $('projFilter').onchange = renderProjects;
+
+function renderMessages(){
+  $('msgList').innerHTML = messages.map(m => `<div class="msg-row ${m.read ? '' : 'unread'}">
+    <div class="msg-top"><b>${esc(m.name)}</b><small>&lt;${esc(m.email)}&gt; · ${new Date(m.createdAt).toLocaleString()}</small>${m.read ? '' : '<span class="unread-dot">NEW</span>'}
+    <span style="margin-left:auto;display:flex;gap:8px">
+      <button class="icon-btn" onclick="toggleRead('${m._id}', ${!!m.read})">${m.read ? 'Mark unread' : 'Mark read'}</button>
+      <button class="icon-btn danger" onclick="delM('${m._id}')">Delete</button></span></div>
+    <small style="color:var(--accent)">${esc(m.subject || '(no subject)')}</small><p>${esc(m.message)}</p></div>`).join('')
+    || '<p style="color:var(--muted)">Inbox zero. Nice.</p>';
+}
+window.toggleRead = async (id, isRead) => { try { await api('/api/messages/' + id, { method: 'PATCH', json: true, body: JSON.stringify({ read: !isRead }) }); loadAll(); } catch(e){ showToast(e.message); } };
+window.toggleFeat = async (id) => { try { await api('/api/projects/' + id + '/featured', { method: 'PATCH' }); loadAll(); } catch(e){ showToast(e.message); } };
+window.delP = async (id) => { if (!confirm('Delete this project?')) return; try { await api('/api/projects/' + id, { method: 'DELETE' }); showToast('Project deleted'); loadAll(); } catch(e){ showToast(e.message); } };
+window.delM = async (id) => { if (!confirm('Delete this message?')) return; try { await api('/api/messages/' + id, { method: 'DELETE' }); showToast('Message deleted'); loadAll(); } catch(e){ showToast(e.message); } };
+$('refreshBtn').onclick = loadAll;
+
+// drawer
+function openDrawer(edit){ $('drawer').classList.add('open'); $('scrim').classList.add('open'); if (!edit) { $('projectForm').reset(); $('fId').value=''; clearPreview(); $('formTitle').textContent = '+ Add project'; } }
+function closeDrawer(){ $('drawer').classList.remove('open'); $('scrim').classList.remove('open'); }
+$('newProjectBtn').onclick = () => openDrawer(false);
+$('cancelBtn').onclick = closeDrawer; $('scrim').onclick = closeDrawer;
+window.editP = (id) => {
+  const p = projects.find(x => String(x._id) === String(id)); if (!p) return;
+  $('fId').value = p._id; $('fTitle').value = p.title || ''; $('fDesc').value = p.description || '';
+  $('fTechs').value = (p.techs || []).join(', '); $('fCat').value = p.category || 'fullstack';
+  $('fFeat').checked = !!p.featured; $('fGithub').value = p.githubUrl || ''; $('fLive').value = p.liveUrl || '';
+  $('fImg').value = (p.imageUrl || '').startsWith('/uploads') ? '' : (p.imageUrl || '');
+  clearPreview(); $('formTitle').textContent = 'Edit project'; openDrawer(true);
+};
+function clearPreview(){ $('fFile').value=''; $('imgPreview').style.display='none'; }
+$('imgClear').onclick = clearPreview;
+$('fFile').onchange = () => {
+  const f = $('fFile').files[0]; if (!f) return;
+  if (!f.type.startsWith('image/') || f.size > MAX_IMG) { showToast('Images only, max 5MB.'); clearPreview(); return; }
+  $('imgPrevThumb').src = URL.createObjectURL(f);
+  $('imgPrevMeta').textContent = `${f.name} · ${(f.size/1024).toFixed(0)} KB`;
+  $('imgPreview').style.display = 'flex';
+};
+function setProgress(p){ const bar = $('saveProgress'); bar.classList.add('on'); bar.firstElementChild.style.width = p + '%'; if (p >= 100) setTimeout(()=>bar.classList.remove('on'), 600); }
+$('projectForm').onsubmit = (e) => {
+  e.preventDefault();
+  const title = $('fTitle').value.trim(), desc = $('fDesc').value.trim();
+  if (!title || !desc) { showToast('Title and description are required.'); return; }
+  const file = $('fFile').files[0];
+  if (file && file.size > MAX_IMG) { showToast('Image exceeds 5MB.'); return; }
+  const btn = $('saveBtn'); btn.disabled = true; btn.textContent = 'Saving…';
+  const fd = new FormData();
+  fd.append('title', title); fd.append('description', desc);
+  fd.append('techs', $('fTechs').value); fd.append('category', $('fCat').value);
+  fd.append('featured', $('fFeat').checked); fd.append('githubUrl', $('fGithub').value.trim());
+  fd.append('liveUrl', $('fLive').value.trim());
+  if ($('fImg').value.trim()) fd.append('imageUrl', $('fImg').value.trim());
+  if (file) fd.append('image', file);
+  const id = $('fId').value;
+  const xhr = new XMLHttpRequest(); xhr.timeout = 30000;
+  xhr.upload.onprogress = ev => { if (ev.lengthComputable) { const p = Math.round(ev.loaded/ev.total*100); btn.textContent = `Uploading… ${p}%`; setProgress(p); } };
+  xhr.onload = () => {
+    btn.disabled = false; btn.textContent = 'Save project'; setProgress(100);
+    if (xhr.status === 401) { sessionStorage.removeItem('admin_key'); window.location.replace('admin-login.html'); return; }
+    if (xhr.status >= 200 && xhr.status < 300) { showToast(id ? 'Project updated!' : 'Project added!'); closeDrawer(); loadAll(); }
+    else { let m = 'Save failed'; try { m = JSON.parse(xhr.responseText).error || m; } catch {} showToast(m); }
+  };
+  xhr.onerror = () => { btn.disabled = false; btn.textContent = 'Save project'; showToast('Cannot reach backend at ' + API); };
+  xhr.ontimeout = () => { btn.disabled = false; btn.textContent = 'Save project'; showToast('Timed out — try a smaller image.'); };
+  xhr.open(id ? 'PUT' : 'POST', API + (id ? '/api/projects/' + id : '/api/projects'));
+  if (KEY) xhr.setRequestHeader('x-admin-key', KEY);
+  xhr.send(fd);
+};
+
+// settings
+$('apiBase').value = API; $('keyField').value = KEY;
+$('saveSettings').onclick = async () => {
+  const btn = $('saveSettings');
+  const newAPI = $('apiBase').value.trim().replace(/\/$/, '') || 'http://localhost:5000';
+  const newKEY = $('keyField').value.trim();
+  const hint = $('settingsHint');
+  if (!newKEY) { hint.textContent = 'Enter the server password first (backend/.env → ADMIN_KEY).'; return; }
+  btn.disabled = true;
+  hint.textContent = 'Verifying key with the backend…';
+  try {
+    // Verify BEFORE saving: a wrong key here used to silently lock you out.
+    const r = await fetch(newAPI + '/api/stats', { headers: { 'x-admin-key': newKEY } });
+    if (r.status === 401) throw new Error('wrong key');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+  } catch (e) {
+    hint.textContent = e.message === 'wrong key'
+      ? 'That key does not match the server (backend/.env → ADMIN_KEY). Nothing was saved — try again.'
+      : 'Cannot reach ' + newAPI + ' — check the URL and that the backend is running. Nothing was saved.';
+    btn.disabled = false;
+    return;
+  }
+  API = newAPI; KEY = newKEY;
+  localStorage.setItem('api_base', API); sessionStorage.setItem('admin_key', KEY);
+  hint.textContent = 'Verified and saved. Reloading…';
+  btn.disabled = false;
+  setTimeout(loadAll, 400);
+};
+$('testBtn').onclick = async () => {
+  try { const h = await fetch(($('apiBase').value.trim() || API) + '/api/health').then(r => r.json()); $('settingsHint').textContent = `OK — DB: ${h.db}, uploads: ${h.cloudinary ? 'Cloudinary ✓' : 'URL mode'}`; }
+  catch { $('settingsHint').textContent = 'Cannot reach that API URL.'; }
+};
+
+if (KEY) loadAll();
+</script>
+</body>
+</html>
