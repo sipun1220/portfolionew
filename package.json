@@ -1,0 +1,10 @@
+{
+  "name": "render-keep-alive",
+  "version": "1.0.0",
+  "description": "Prevents Render free tier from sleeping",
+  "main": "keep-alive.js",
+  "scripts": {
+    "start": "node keep-alive.js"
+  },
+  "dependencies": {}
+}
